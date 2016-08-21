@@ -2,7 +2,7 @@
 title: "Projecting 2008 voting onto curent congressional districts"
 author: "C. Davis Buenger"
 date: "August 20, 2016"
-output: html_document
+output: md_document
 ---
 
 The following analysis predicts congressional elections in Ohio for curent districts under the assumption of a 2008 electorate and the condition that voters employ party affiliation as the sole determining factor for who to vote for. The approach is gerneral and could be used to predict any hypothetical district and to check that the theoretical district met congresional requirements for population totals. 
