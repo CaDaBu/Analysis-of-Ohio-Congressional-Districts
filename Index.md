@@ -1,21 +1,21 @@
 The following analysis predicts congressional elections in Ohio for
-curent districts under the assumption of a 2008 electorate and the
+current districts under the assumption of a 2008 electorate and the
 condition that voters employ party affiliation as the sole determining
-factor for who to vote for. The approach is gerneral and could be used
-to predict any hypothetical district and to check that the theoretical
-district met congresional requirements for population totals.
+factor for who to vote for. The approach is general and could be used to
+predict any hypothetical district and to check that the theoretical
+district met congressional requirements for population totals.
 
 Preprocessing 2008 electoral results
 ------------------------------------
 
 From the Harvard Election Data Archive
 <https://dataverse.harvard.edu/dataset.xhtml?persistentId=hdl:1902.1/21919>,
-I obtained precinct level election results for 2008. Each pricint had
+I obtained precinct level election results for 2008. Each precinct had
 the longitude and latitude for the barycenter of the district as well as
 recorded vote totals for the Democratic and Republican house candidate
 in that district. I further augmented the data by estimating the
-population of each pricinct by multiplying the total vote in each
-pricinct by the reciprocol of the voter turn out rate in the county.
+population of each precinct by multiplying the total vote in each
+precinct by the reciprocal of the voter turn out rate in the county.
 
     library(dplyr)
 
@@ -40,11 +40,11 @@ pricinct by the reciprocol of the voter turn out rate in the county.
     fin<-final[,c("INTPTLAT10","INTPTLON10","ush_dvote_08","ush_rvote_08","pripop")]
 
 Additionally, A close inspection of the data demonstrated that the
-latatude and longitude data and vote counts for Van Wert county were
+latitude and longitude data and vote counts for Van Wert county were
 missing. We removed the offending precincts and added one data point for
 the entire county. This should not be a problem as Van Wert's small
 population size and position on the boarder of Ohio makes it unlikely
-for hypothetical pricincts to partition Van Wert
+for hypothetical precincts to partition Van Wert
 
     fin[11069,]=c(40.8712, -84.5641,5046,8993,28744)
     fin<-fin[!is.na(fin[,1]),]
@@ -54,38 +54,38 @@ Verbal description of the algorithm
 
 The approach will be relatively simple. Give a hypothetical district we
 will obtain a Democratic vote total, Republican vote total, and
-population total as follows. For each pricinct we will check if the
+population total as follows. For each precinct we will check if the
 coordinates for the barycenter fall within the district or not. If the
 point is in the district we will add the Democratic vote, Republican
 vote, and population of that precinct to the respective running total.
 After performing this process for each of the over 10,000 precincts we
-arive at the estimates for the precinct.
+arrive at the estimates for the precinct.
 
-The most dificult part of the algorithm will be determining when a point
-is in a district or not. Districts often constitute polygons with over
-1,000 vertices and hence are quite complicate and irregular objects.
-Thus determining membership of a point in a district presents a small
-challenge.
+The most difficult part of the algorithm will be determining when a
+point is in a district or not. Districts often constitute polygons with
+over 1,000 vertices and hence are quite complicate and irregular
+objects. Thus determining membership of a point in a district presents a
+small challenge.
 
 To overcome this challenge, we first triangulate each polygonal
-district. In otherwords we decompose the complicated polygon which is
+district. In other words we decompose the complicated polygon, which is
 the district into a large number of triangles. Triangles and convex
-shapes more generally have a regularity to their geometry. Specifically
+shapes more generally have regularity to their geometry. Specifically
 the interior of convex shape is the intersection of half planes formed
 by the edges. Thus determining membership of a point in a convex shape
-reduces to determining membership in a half plane which can be performed
-by elementary geometry.
+reduces to determining membership in a half plane, which can be
+performed by elementary geometry.
 
 Since all the triangles in our triangulation form our district, it
-suffices to find Democratic vote, Republicant vote, and population
-totals for each triangle and then sum over all of the triangles.
+suffices to find Democratic vote, Republican vote, and population totals
+for each triangle and then sum over all of the triangles.
 
 An explicit look at the algorithm
 ---------------------------------
 
 As indicated above our first goal will be to create an algorithm to
-triangulate a district. To do this we need some basic geometry tools,
-the first being angle measurement. The following function takes three
+triangulate a district. To do this we need some basic geometry tools. We
+need to be able to measure angles. The following function takes three
 points x1, x2, and x3, and measures the angle between the vector from x2
 to x1 and the vector from x2 to x3 in a counter-clockwise direction.
 Note that the returned angle is given in units radians/pi. Thus a right
@@ -120,7 +120,7 @@ as claimed.
     ## [1] 1.5
 
 We require the following preprocessing functions for our district. The
-first, deldup, deletes repeated verticies in polygons. The second,
+first, deldup, deletes repeated vertices in polygons. The second,
 preproc, takes a polygon as an input and returns a polygon such that the
 vertices are listed in a clockwise order.
 
@@ -152,7 +152,7 @@ vertices are listed in a clockwise order.
 
 Next we have two functions tript and convpt which determine if a point
 lies in a given triangle or convex shape respectfully. Note that the
-stipulation that the function ang measure the angle counter clocwise
+stipulation that the function ang measure the angle counter clockwise
 allows us to check if the point is in each half plane formed by the
 edges.
 
@@ -194,7 +194,7 @@ triangl. Thus
     ## [1] 1
 
 We are now ready to show you the triangulation function called tri. The
-function relys on the fact that every polygon can be decomposed into a
+function relies on the fact that every polygon can be decomposed into a
 triangle and a second polygon with strictly fewer edges. We identify the
 triangle by testing sets of three consecutive points in the polygon as
 test triangles. For a triangle to form a proper decomposition, it must
@@ -213,10 +213,10 @@ other edges, or equivalently, the triangle must not contain any other
 points of the polygon.
 
 The algorithm takes a polygon and decomposes it into a triangle and a
-polygon with a strictly smaller numer of sides. It adds the triangle to
-a list of triangles and the decomposes the new smaller polygon into a
-triangle and an even smaller polygon. Thus by itterating this process
-the function tri produces a complete triangulation of the given polygon.
+polygon with a strictly smaller number of sides. It adds the triangle to
+a list of triangles and then decomposes the new smaller polygon into a
+triangle and an even smaller polygon. Thus by iterating this process the
+function tri produces a complete triangulation of the given polygon.
 
     tri<-function(x){
           x<-preproc(x)
@@ -252,10 +252,10 @@ the function tri produces a complete triangulation of the given polygon.
     }
 
 To demonstrate tri, we introduce the package USAboundaries.
-USAboundaries contains boundaries for states, counties, and congresional
-districts over american history. The following code extracts a polygon
-representing the 3rd district of Ohio (Portions of Columbus) and
-triangulates it.
+USAboundaries contains boundaries for states, counties, and
+congressional districts over American history. The following code
+extracts a polygon representing the 3rd district of Ohio (Portions of
+Columbus) and triangulates it.
 
     library(USAboundaries)
     ohiodist<-us_boundaries(type="congressional",resolution="low",state="Ohio")
@@ -266,9 +266,9 @@ triangulates it.
 
 ![](Index_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
-Now, we are almost ready to reveal the function which actually sums
+Now, we are almost ready to reveal the function, which actually sums
 district results, but first let us look at one additional function which
-while theoretically unecessary, allows the code to run faster. The
+while theoretically unnecessary, allows the code to run faster. The
 following two functions take a polygon and return its convex hull (A
 convex hull of a geometric object is the smallest convex shape which
 includes the original object)
@@ -293,9 +293,9 @@ includes the original object)
           
     }
 
-Observe how the function hull takes the third distric an returns its
+Observe how the function hull takes the third district and returns its
 convex hull. The green region is the original district and the purple
-and green together are the convex hull of the district.
+and green regions together are the convex hull of the district.
 
     hullOH3<-hull(OH3)
     plot(OH3,type="n", xlab= "longitude", ylab= "latitude")
@@ -304,15 +304,15 @@ and green together are the convex hull of the district.
 
 ![](Index_files/figure-markdown_strict/unnamed-chunk-11-1.png) As it is
 a quick check to determine if a point is in a convex shape, we first
-will check that a precint lies within the convex hull of the district
+will check that a precinct lies within the convex hull of the district
 before checking if the point is in any of the triangles in the
 triangulation of the district.
 
 Finally the sum\_alldist function takes a list of polygons with lat/lon
 coordinates in Ohio and counts how many people voted for Republican
-house candidates and Democratic house canidates within that district and
-provides an estimate of the population in that district. Note that all
-needed variables were assigned in the data processing section.
+house candidates and Democratic house candidates within that district
+and provides an estimate of the population in that district. Note that
+all needed variables were assigned in the data processing section.
 
     sum_alldist<-function(x){
           y<-list()
@@ -372,9 +372,9 @@ given by USABoundaries. Let's take a quick look at these districts.
 
 ![](Index_files/figure-markdown_strict/unnamed-chunk-13-1.png)
 
-Looks pretty good right. A quick comparison with the shows that
-USABoundaries did a pretty good job recording the boundaries of Ohio's
-congressional districts.
+It looks pretty good right. A quick comparison with the following
+congresional map shows that USABoundaries did a pretty good job
+recording the boundaries of Ohio's congressional districts.
 
 <img src="redistricting.jpg" width="1000px" height="1295px" />
 
@@ -407,7 +407,7 @@ district 9 we derived the following boundary.
 
 We then enter this in place of the USABoundaries district. Observe how
 the new map improves the representation of district 9. Note that we have
-exagerated the boundary to include some of lake Erie, but this should
+exaggerated the boundary to include some of lake Erie, but this should
 have no effect as no precincts are in the lake.
 
     dist<-list()
@@ -445,10 +445,10 @@ Analysis of results
 
 To better understand the outcome of the analysis first we will map the
 results by color and then we will perform bootstrap resampling to
-determin confidence intervals for these results.
+determine confidence intervals for these results.
 
 For the plot we red/blue diverging color spectrum in R. Darker colors of
-blue indicate races that Democrats are more likelye to win and darker
+blue indicate races that Democrats are more likely to win and darker
 colors of red indicate races Republicans are more likely to win.
 
     library(RColorBrewer)
