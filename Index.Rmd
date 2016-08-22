@@ -258,7 +258,7 @@ sum_alldist<-function(x){
 
 We are now ready to take this function and apply it to the districts given by USABoundaries. Let's take a quick look at these districts.
 
-```{rfig.width = 5, fig.height = 6}
+```{r fig.width = 5, fig.height = 6}
 f<-ohiodist@polygons[[1]]@Polygons[[1]]@coords
  for(i in 2:16){f<-rbind(f,ohiodist@polygons[[i]]@Polygons[[1]]@coords)}
 plot(f,type="n", xlab= "longitude", ylab= "latitude")
@@ -300,6 +300,7 @@ dist[[4]]=dist4fix
 plot(f,type="n", xlab= "longitude", ylab= "latitude")
 for(i in 1:16){lines(dist[[i]])}
 ```
+
 With this issue resolved, we apply the algorithm above to these districts
 ```{r}
 res<-sum_alldist(dist)

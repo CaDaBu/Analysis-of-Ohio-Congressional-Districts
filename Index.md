@@ -370,6 +370,8 @@ given by USABoundaries. Let's take a quick look at these districts.
     for(i in 1:16){lines(ohiodist@polygons[[i]]@Polygons[[1]]@coords)}
     polygon(ohiodist@polygons[[4]]@Polygons[[1]]@coords, col="red")
 
+![](Index_files/figure-markdown_strict/unnamed-chunk-13-1.png)
+
 It looks pretty good, right? A quick comparison with the following
 congressional map shows that USABoundaries did a pretty good job
 recording the boundaries of Ohio's congressional districts.
@@ -416,8 +418,10 @@ should have no effect as no precincts are in the lake.
     plot(f,type="n", xlab= "longitude", ylab= "latitude")
     for(i in 1:16){lines(dist[[i]])}
 
-![](Index_files/figure-markdown_strict/unnamed-chunk-16-1.png) With this
-issue resolved, we apply the algorithm above to these districts
+![](Index_files/figure-markdown_strict/unnamed-chunk-16-1.png)
+
+With this issue resolved, we apply the algorithm above to these
+districts
 
     res<-sum_alldist(dist)
     res
@@ -467,10 +471,10 @@ than 55% of the vote.
 
 As the Democrats received 250,000 more votes state wide in 2008 and
 52.4% of the statewide house vote, the fact that they are only predicted
-to win 5 out of 16 districts with 3 districts as tossups constitutes a
-significant manipulation of the electorate. Gerrymandering allowed
-Republicans to take an electorate which favored the Democrats and
-produced an outcome in which they won.
+to win 5 out of 16 districts and only 3 districts are tossups
+constitutes a significant manipulation of the electorate. Gerrymandering
+allowed Republicans to take an electorate, which favored the Democrats
+and produced an outcome in which they won.
 
 In the future, I would like to improve this study in many ways. First, I
 would like to process the data for new less gerrymandered districts.
