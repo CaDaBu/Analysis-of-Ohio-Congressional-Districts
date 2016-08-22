@@ -267,8 +267,10 @@ Columbus) and triangulates it.
     plot(OH3,type="n", xlab= "longitude", ylab= "latitude")
     for(i in 1:length(triOH3)){lines(triOH3[[i]])}
 
-![](Index_files/figure-markdown_strict/unnamed-chunk-9-1.png) \#\#
+![](Index_files/figure-markdown_strict/unnamed-chunk-9-1.png) 
+
 Summation over a Triangulation
+-------------
 
 Now, we are almost ready to reveal the function, which actually sums
 district results, but first let us look at one additional function which
